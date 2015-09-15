@@ -36,18 +36,20 @@ type _logger struct {
 }
 
 //启动日志
+//dir 日志文件存放目录
+//logLevel 日志等级
 func StartLog(dir string, logLevel int) error {
 	mt.Lock()
+	defer mt.Unlock()
 	if log != nil {
-		mt.Unlock()
-		return errors.New("日志已经启动")
+		return errors.New("文件日志已经启动")
 	}
-	log = &_logger{}
-	mt.Unlock()
-	err := log.run(dir, logLevel)
+	tlog := &_logger{logLevel: logLevel, logDir: dir}
+	err := tlog.run()
 	if err != nil {
 		return errors.New(fmt.Sprintf("启动日志错误:%s", err.Error()))
 	}
+	log = tlog
 	return nil
 }
 
@@ -137,13 +139,13 @@ func (l *_logger) critical(format string, args ...interface{}) {
 }
 
 //启动日志
-func (l *_logger) run(logDir string, logLevel int) error {
-	err := os.MkdirAll(logDir, 0660)
+func (l *_logger) run() error {
+	err := os.MkdirAll(l.logDir, 0660)
 	if err != nil {
 		return err
 	}
 	var logFilename string = getLogInfoFileName()
-	logFile := filepath.Join(logDir, logFilename)
+	logFile := filepath.Join(l.logDir, logFilename)
 	fd, err := os.OpenFile(logFile, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		return err
@@ -151,8 +153,6 @@ func (l *_logger) run(logDir string, logLevel int) error {
 	logChan := make(chan *string, 100000)
 	l.fd = fd
 	l.logChan = logChan
-	l.logLevel = logLevel
-	l.logDir = logDir
 	glog.SetOutput(fd)
 	glog.SetFlags(glog.Llongfile | glog.LstdFlags)
 	glog.SetPrefix("[log] ")
