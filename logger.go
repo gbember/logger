@@ -18,6 +18,11 @@ import (
 var (
 	log *_logger
 	mt  sync.Mutex
+
+	DebugLogFun    = func(s string) { Debug(s) }
+	InfoLogFun     = func(s string) { Info(s) }
+	ErrorLogFun    = func(s string) { Error(s) }
+	CriticalLogFun = func(s string) { Critical(s) }
 )
 
 const (
