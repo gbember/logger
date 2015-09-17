@@ -89,7 +89,7 @@ func Critical(format string, args ...interface{}) {
 func (l *_logger) debug(format string, args ...interface{}) {
 	if l.logLevel >= DEBUG {
 		str := fmt.Sprintf(format, args...)
-		pc, file, lineno, ok := runtime.Caller(1)
+		pc, file, lineno, ok := runtime.Caller(2)
 		src := ""
 		if ok {
 			src = fmt.Sprintf("%s[DEBUG](%s=[%s]:%d) %s\n", time.Now().Format("======2006/01/02 15:04:05====="),
@@ -103,7 +103,7 @@ func (l *_logger) debug(format string, args ...interface{}) {
 func (l *_logger) info(format string, args ...interface{}) {
 	if l.logLevel >= INFO {
 		str := fmt.Sprintf(format, args...)
-		pc, file, lineno, ok := runtime.Caller(1)
+		pc, file, lineno, ok := runtime.Caller(2)
 		src := ""
 		if ok {
 			src = fmt.Sprintf("%s[INFO](%s=[%s]:%d) %s\n", time.Now().Format("======2006/01/02 15:04:05====="),
@@ -117,7 +117,7 @@ func (l *_logger) info(format string, args ...interface{}) {
 func (l *_logger) error(format string, args ...interface{}) {
 	if l.logLevel >= ERROR {
 		str := fmt.Sprintf(format, args...)
-		pc, file, lineno, ok := runtime.Caller(1)
+		pc, file, lineno, ok := runtime.Caller(2)
 		src := ""
 		if ok {
 			src = fmt.Sprintf("%s[Error](%s=[%s]:%d) %s\n", time.Now().Format("======2006/01/02 15:04:05====="),
@@ -131,7 +131,7 @@ func (l *_logger) error(format string, args ...interface{}) {
 func (l *_logger) critical(format string, args ...interface{}) {
 	if l.logLevel >= CRITICAL {
 		str := fmt.Sprintf(format, args...)
-		pc, file, lineno, ok := runtime.Caller(1)
+		pc, file, lineno, ok := runtime.Caller(2)
 		src := ""
 		if ok {
 			src = fmt.Sprintf("%s[CRITICAL](%s=[%s]:%d) %s\n", time.Now().Format("======2006/01/02 15:04:05====="),
